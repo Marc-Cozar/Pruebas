@@ -5,7 +5,9 @@
  */
 package examenian;
 
+import entity.Movimiento;
 import entity.Partida;
+import static examenian.UnoVsUno.movimiento;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -19,6 +21,10 @@ public class CarregarPartida extends javax.swing.JFrame {
 
     Session session;
     List list;
+    List list2;
+    Movimiento movimiento;
+    int movimientoC = 0;
+    boolean checker=true;
     
     
     /**
@@ -72,7 +78,53 @@ public class CarregarPartida extends javax.swing.JFrame {
          tablePartidas.setModel(model);
     }
     
+        public void generarLista(int id){
+            
+        tablePartida.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "", "", ""
+            }
+        ));    
+        //resetear movimientos
+        movimientoC=0;
+        //resetear checker
+        boolean checker=true;
+        
+        session.beginTransaction();
+        
+        String SQL_QUERY;
+        SQL_QUERY = "FROM Movimiento m where m.partida.idPartida = " + id ;
+        
+        Query query = session.createQuery(SQL_QUERY);
+        list2 = query.list();
+        session.getTransaction().commit();
+    }
     
+    public void movimientoCount(int i){
+    
+        
+        System.out.println("HOLA ENTRA1");
+        
+        if (i < list2.size()) {
+            movimiento = (Movimiento) list2.get(i);
+
+            if(checker){
+                tablePartida.setValueAt("X", movimiento.getFila(), movimiento.getColumna());
+                checker=false;
+                System.out.println("HOLA ENTRA");
+            } else if (!checker){
+                tablePartida.setValueAt("O", movimiento.getFila(), movimiento.getColumna());
+                System.out.println("HOLA ENTRA3");
+                checker=true;
+            }
+                movimientoC++;
+        }
+    }
     
     
 
@@ -141,9 +193,19 @@ public class CarregarPartida extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton1.setText("CARREGAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jButton2.setText("SEGÜENT MOVIMENT");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -204,6 +266,18 @@ public class CarregarPartida extends javax.swing.JFrame {
     private void txtPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPartidaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPartidaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        int id = Integer.parseInt(txtPartida.getText());
+        generarLista(id);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        movimientoCount(movimientoC);
+        System.out.println("HOLA");
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

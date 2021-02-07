@@ -191,6 +191,8 @@ public class UnoVsUno extends javax.swing.JFrame {
     
     public void Omple(int fila, int columna){
 
+        crearMovimiento(columna, fila);
+        
         if(jugaX){
             table1vs1.setValueAt("X", fila, columna);
             jugaX = false;
@@ -219,10 +221,9 @@ public class UnoVsUno extends javax.swing.JFrame {
         if((table1vs1.getValueAt(0, 0))=="O" && (table1vs1.getValueAt(0, 1))=="O" && (table1vs1.getValueAt(0, 2))=="O" ||
                 (table1vs1.getValueAt(1, 0))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(1, 2))=="O" ||
                 (table1vs1.getValueAt(2, 0))=="O" && (table1vs1.getValueAt(2, 1))=="O" && (table1vs1.getValueAt(2, 2))=="O" ||
-                (table1vs1.getValueAt(1, 0))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(1, 2))=="O" ||
-                (table1vs1.getValueAt(0, 0))=="O" && (table1vs1.getValueAt(0, 1))=="O" && (table1vs1.getValueAt(0, 2))=="O" ||
-                (table1vs1.getValueAt(1, 0))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(1, 2))=="O" ||
-                (table1vs1.getValueAt(2, 0))=="O" && (table1vs1.getValueAt(2, 1))=="O" && (table1vs1.getValueAt(2, 2))=="O" ||
+                (table1vs1.getValueAt(0, 0))=="O" && (table1vs1.getValueAt(1, 0))=="O" && (table1vs1.getValueAt(2, 0))=="O" ||
+                (table1vs1.getValueAt(0, 1))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(2, 1))=="O" ||
+                (table1vs1.getValueAt(0, 2))=="O" && (table1vs1.getValueAt(1, 2))=="O" && (table1vs1.getValueAt(2, 2))=="O" ||
                 (table1vs1.getValueAt(0, 0))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(2, 2))=="O" ||
                 (table1vs1.getValueAt(2, 0))=="O" && (table1vs1.getValueAt(1, 1))=="O" && (table1vs1.getValueAt(0, 2))=="O"){
             
@@ -235,10 +236,9 @@ public class UnoVsUno extends javax.swing.JFrame {
         } else if((table1vs1.getValueAt(0, 0))=="X" && (table1vs1.getValueAt(0, 1))=="X" && (table1vs1.getValueAt(0, 2))=="X" ||
                 (table1vs1.getValueAt(1, 0))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(1, 2))=="X" ||
                 (table1vs1.getValueAt(2, 0))=="X" && (table1vs1.getValueAt(2, 1))=="X" && (table1vs1.getValueAt(2, 2))=="X" ||
-                (table1vs1.getValueAt(1, 0))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(1, 2))=="X" ||
-                (table1vs1.getValueAt(0, 0))=="X" && (table1vs1.getValueAt(0, 1))=="X" && (table1vs1.getValueAt(0, 2))=="X" ||
-                (table1vs1.getValueAt(1, 0))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(1, 2))=="X" ||
-                (table1vs1.getValueAt(2, 0))=="X" && (table1vs1.getValueAt(2, 1))=="X" && (table1vs1.getValueAt(2, 2))=="X" ||
+                (table1vs1.getValueAt(0, 0))=="X" && (table1vs1.getValueAt(1, 0))=="X" && (table1vs1.getValueAt(2, 0))=="X" ||
+                (table1vs1.getValueAt(0, 1))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(2, 1))=="X" ||
+                (table1vs1.getValueAt(0, 2))=="X" && (table1vs1.getValueAt(1, 2))=="X" && (table1vs1.getValueAt(2, 2))=="X" ||
                 (table1vs1.getValueAt(0, 0))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(2, 2))=="X" ||
                 (table1vs1.getValueAt(2, 0))=="X" && (table1vs1.getValueAt(1, 1))=="X" && (table1vs1.getValueAt(0, 2))=="X"){
                 
@@ -262,6 +262,30 @@ public class UnoVsUno extends javax.swing.JFrame {
         
         } catch (HibernateException e) {
             System.out.println(" a " + e);
+        } finally {
+            session.close();
+        }
+        
+    }
+    
+    public static void crearMovimiento(int columna, int fila) {
+        
+        movimiento = new Movimiento(partida, columna, fila);
+    
+        
+        movimiento.setPartida(partida);
+        movimiento.setColumna(columna);
+        movimiento.setFila(fila);
+
+        
+        try {
+            session = NewHibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            session.persist(movimiento);
+            session.getTransaction().commit();
+            
+        } catch (HibernateException e) {
+            System.out.println(" hola marc " + e);
         } finally {
             session.close();
         }
