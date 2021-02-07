@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/02/2021 17:55:26 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.Movimiento" table="movimiento" catalog="3enralla" optimistic-lock="version">
+        <id name="idMovimiento" type="java.lang.Integer">
+            <column name="idMovimiento" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="partida" class="entity.Partida" fetch="select">
+            <column name="idPartida" not-null="true" />
+        </many-to-one>
+        <property name="columna" type="int">
+            <column name="columna" not-null="true" />
+        </property>
+        <property name="fila" type="int">
+            <column name="fila" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
